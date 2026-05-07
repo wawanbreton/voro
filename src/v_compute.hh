@@ -13,6 +13,7 @@
 namespace voro
 {
 
+template<class c_class>
 class voro_compute
 {
 public:

@@ -8,11 +8,14 @@
  * \brief Function implementantions for the voro_compute template. */
 
 #include "v_compute.hh"
-
 #include "container.hh"
-#include "container_prd.hh"
-#include "rad_option.hh"
+#include "container_poly.hh"
+#include "container_periodic.hh"
+#include "container_periodic_poly.hh"
+#include "radius_mono.hh"
+#include "radius_poly.hh"
 #include "worklist.hh"
+
 
 namespace voro
 {

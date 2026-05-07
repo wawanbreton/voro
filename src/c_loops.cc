@@ -7,7 +7,8 @@
 /** \file c_loops.cc
  * \brief Function implementations for the loop classes. */
 
-#include "c_loops.hh"
+#include "c_loop_subset.hh"
+#include "particle_order.hh"
 
 namespace voro
 {

@@ -8,11 +8,12 @@
  * \brief Function implementations for the pre_container and related classes.
  */
 
+#include "pre_container_base.hh"
 #include "pre_container.hh"
+#include "pre_container_poly.hh"
 
 #include <cmath>
 
-#include "config.hh"
 
 namespace voro
 {

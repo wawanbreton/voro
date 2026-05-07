@@ -8,7 +8,9 @@
  * \brief Function implementations for the container_periodic_base and
  * related classes. */
 
-#include "container_prd.hh"
+#include "container_periodic_base.hh"
+#include "container_periodic.hh"
+#include "container_periodic_poly.hh"
 
 namespace voro
 {

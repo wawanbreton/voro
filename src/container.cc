@@ -7,7 +7,10 @@
 /** \file container.cc
  * \brief Function implementations for the container and related classes. */
 
+#include "wall_list.hh"
+#include "container_base.hh"
 #include "container.hh"
+#include "container_poly.hh"
 
 namespace voro
 {

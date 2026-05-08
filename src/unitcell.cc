@@ -12,7 +12,6 @@
 #include <cmath>
 #include <queue>
 
-#include "cell.hh"
 
 namespace voro
 {

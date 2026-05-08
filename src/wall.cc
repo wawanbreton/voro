@@ -7,7 +7,10 @@
 /** \file wall.cc
  * \brief Function implementations for the derived wall classes. */
 
-#include "wall.hh"
+#include "wall_sphere.hh"
+#include "wall_plane.hh"
+#include "wall_cylinder.hh"
+#include "wall_cone.hh"
 
 namespace voro
 {

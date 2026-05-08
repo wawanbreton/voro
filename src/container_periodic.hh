@@ -4,12 +4,12 @@
 // Email    : chr@alum.mit.edu
 // Date     : August 30th 2011
 
-#ifndef VOROPP_CONTAINER_HH
-#define VOROPP_CONTAINER_HH
+#ifndef VOROPP_CONTAINER_PERIODIC_HH
+#define VOROPP_CONTAINER_PERIODIC_HH
 
-#include "container_base.hh"
+#include "container_periodic_base.hh"
 #include "particle_order.hh"
-#include "c_loop_all.hh"
+#include "c_loop_all_periodic.hh"
 #include "radius_mono.hh"
 #include "v_compute.hh"
 #include "voronoicell.hh"
@@ -17,31 +17,19 @@
 namespace voro
 {
 
-/** \brief Extension of the container_base class for computing regular Voronoi
- * tessellations.
+/** \brief Extension of the container_periodic_base class for computing regular
+ * Voronoi tessellations.
  *
- * This class is an extension of the container_base class that has routines
+ * This class is an extension of the container_periodic_base that has routines
  * specifically for computing the regular Voronoi tessellation with no
  * dependence on particle radii. */
-class container : public container_base, public radius_mono
+class container_periodic : public container_periodic_base, public radius_mono
 {
 public:
-    container(
-        double ax_,
-        double bx_,
-        double ay_,
-        double by_,
-        double az_,
-        double bz_,
-        int nx_,
-        int ny_,
-        int nz_,
-        bool xperiodic_,
-        bool yperiodic_,
-        bool zperiodic_,
-        int init_mem);
+    container_periodic(double bx_, double bxy_, double by_, double bxz_, double byz_, double bz_, int nx_, int ny_, int nz_, int init_mem_);
     void clear();
     void put(int n, double x, double y, double z);
+    void put(int n, double x, double y, double z, int& ai, int& aj, int& ak);
     void put(particle_order& vo, int n, double x, double y, double z);
     void import(FILE* fp = stdin);
     void import(particle_order& vo, FILE* fp = stdin);
@@ -93,7 +81,7 @@ public:
      * \param[in] fp a file handle to write to. */
     inline void draw_particles(FILE* fp = stdout)
     {
-        c_loop_all vl(*this);
+        c_loop_all_periodic vl(*this);
         draw_particles(vl, fp);
     }
     /** Dumps all of the particle IDs and positions to a file.
@@ -122,7 +110,7 @@ public:
      * \param[in] fp a file handle to write to. */
     inline void draw_particles_pov(FILE* fp = stdout)
     {
-        c_loop_all vl(*this);
+        c_loop_all_periodic vl(*this);
         draw_particles_pov(vl, fp);
     }
     /** Dumps all particle positions in POV-Ray format.
@@ -156,10 +144,10 @@ public:
      * \param[in] fp a file handle to write to. */
     inline void draw_cells_gnuplot(FILE* fp = stdout)
     {
-        c_loop_all vl(*this);
+        c_loop_all_periodic vl(*this);
         draw_cells_gnuplot(vl, fp);
     }
-    /** Computes all Voronoi cells and saves the output in gnuplot
+    /** Compute all Voronoi cells and saves the output in gnuplot
      * format.
      * \param[in] filename the name of the file to write to. */
     inline void draw_cells_gnuplot(const char* filename)
@@ -192,7 +180,7 @@ public:
      * \param[in] fp a file handle to write to. */
     inline void draw_cells_pov(FILE* fp = stdout)
     {
-        c_loop_all vl(*this);
+        c_loop_all_periodic vl(*this);
         draw_cells_pov(vl, fp);
     }
     /** Computes all Voronoi cells and saves the output in POV-Ray
@@ -252,8 +240,8 @@ public:
      * 		 computed cell.
      * \param[in] vl the loop class to use.
      * \return True if the cell was computed. If the cell cannot be
-     * computed, if it is removed entirely by a wall or boundary
-     * condition, then the routine returns false. */
+     * computed because it was removed entirely for some reason,
+     * then the routine returns false. */
     template<class v_cell, class c_loop>
     inline bool compute_cell(v_cell& c, c_loop& vl)
     {
@@ -265,12 +253,12 @@ public:
      * \param[in] ijk the block that the particle is within.
      * \param[in] q the index of the particle within the block.
      * \return True if the cell was computed. If the cell cannot be
-     * computed, if it is removed entirely by a wall or boundary
-     * condition, then the routine returns false. */
+     * computed because it was removed entirely for some reason,
+     * then the routine returns false. */
     template<class v_cell>
     inline bool compute_cell(v_cell& c, int ijk, int q)
     {
-        int k = ijk / nxy, ijkt = ijk - nxy * k, j = ijkt / nx, i = ijkt - j * nx;
+        int k(ijk / (nx * oy)), ijkt(ijk - (nx * oy) * k), j(ijkt / nx), i(ijkt - j * nx);
         return vc.compute_cell(c, ijk, q, i, j, k);
     }
     /** Computes the Voronoi cell for a ghost particle at a given
@@ -285,22 +273,19 @@ public:
     inline bool compute_ghost_cell(v_cell& c, double x, double y, double z)
     {
         int ijk;
-        if (put_locate_block(ijk, x, y, z))
-        {
-            double* pp = p[ijk] + 3 * co[ijk]++;
-            *(pp++) = x;
-            *(pp++) = y;
-            *pp = z;
-            bool q = compute_cell(c, ijk, co[ijk] - 1);
-            co[ijk]--;
-            return q;
-        }
-        return false;
+        put_locate_block(ijk, x, y, z);
+        double* pp = p[ijk] + 3 * co[ijk]++;
+        *(pp++) = x;
+        *(pp++) = y;
+        *(pp++) = z;
+        bool q = compute_cell(c, ijk, co[ijk] - 1);
+        co[ijk]--;
+        return q;
     }
 
 private:
-    voro_compute<container> vc;
-    friend class voro_compute<container>;
+    voro_compute<container_periodic> vc;
+    friend class voro_compute<container_periodic>;
 };
 
 } // namespace voro

@@ -9,15 +9,10 @@
 
 #include <cstring>
 
+#include "blocks_mode.hh"
 #include "voro++.hh"
 using namespace voro;
 
-enum blocks_mode
-{
-    none,
-    length_scale,
-    specified
-};
 
 // A maximum allowed number of regions, to prevent enormous amounts of memory
 // being allocated

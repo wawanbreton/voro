@@ -7,13 +7,13 @@
 /** \file cell.cc
  * \brief Function implementations for the voronoicell and related classes. */
 
-#include "cell.hh"
+#include "voronoicell_base.hh"
+#include "voronoicell.hh"
+#include "voronoicell_neighbor.hh"
 
 #include <cmath>
 #include <cstring>
 
-#include "common.hh"
-#include "config.hh"
 
 namespace voro
 {

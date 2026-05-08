@@ -4,39 +4,15 @@
 // Email    : chr@alum.mit.edu
 // Date     : August 30th 2011
 
-/** \file v_compute.hh
- * \brief Header file for the voro_compute template and related classes. */
-
 #ifndef VOROPP_V_COMPUTE_HH
 #define VOROPP_V_COMPUTE_HH
 
-#include "cell.hh"
+#include "particle_record.hh"
 #include "config.hh"
 #include "worklist.hh"
-
 namespace voro
 {
 
-/** \brief Structure for holding information about a particle.
- *
- * This small structure holds information about a single particle, and is used
- * by several of the routines in the voro_compute template for passing
- * information by reference between functions. */
-struct particle_record
-{
-    /** The index of the block that the particle is within. */
-    int ijk;
-    /** The number of particle within its block. */
-    int l;
-    /** The x-index of the block. */
-    int di;
-    /** The y-index of the block. */
-    int dj;
-    /** The z-index of the block. */
-    int dk;
-};
-
-/** \brief Template for carrying out Voronoi cell computations. */
 template<class c_class>
 class voro_compute
 {
